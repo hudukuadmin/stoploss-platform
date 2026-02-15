@@ -10,18 +10,38 @@ import { DollarSign, TrendingUp, AlertTriangle, Shield } from 'lucide-react';
 import type { DashboardMetrics } from '../types';
 import { analyticsApi } from '../api/services';
 
-const COLORS = ['#3b82f6', '#8b5cf6', '#22c55e', '#f59e0b', '#ef4444'];
+const COLORS = ['#6f4891', '#8d5ead', '#0d9488', '#f59e0b', '#ef4444'];
 
-const defaultMetrics: DashboardMetrics = {
-  totalGroups: 0, totalActiveQuotes: 0, totalActivePolicies: 0,
-  totalPremiumInForce: 0, totalExpectedClaims: 0, averageRiskScore: 0,
-  averagePepmRate: 0, quotesByStatus: {}, policiesByStatus: {},
-  coverageBreakdown: {}, riskDistribution: { low: 0, moderate: 0, high: 0, very_high: 0 },
-  premiumTrend: [],
+const mockMetrics: DashboardMetrics = {
+  totalGroups: 24,
+  totalActiveQuotes: 18,
+  totalActivePolicies: 14,
+  totalPremiumInForce: 5830000,
+  totalExpectedClaims: 4285000,
+  averageRiskScore: 0.44,
+  averagePepmRate: 298.35,
+  quotesByStatus: { draft: 4, pending_review: 3, approved: 5, declined: 2, bound: 4 },
+  policiesByStatus: { active: 14, pending: 3, expired: 5, cancelled: 2 },
+  coverageBreakdown: { specific: 5, aggregate: 3, both: 6, quota_share: 2, surety_bond: 4 },
+  riskDistribution: { low: 9, moderate: 8, high: 5, very_high: 2 },
+  premiumTrend: [
+    { month: 'Mar 2025', premium: 310000 },
+    { month: 'Apr 2025', premium: 325000 },
+    { month: 'May 2025', premium: 348000 },
+    { month: 'Jun 2025', premium: 362000 },
+    { month: 'Jul 2025', premium: 385000 },
+    { month: 'Aug 2025', premium: 401000 },
+    { month: 'Sep 2025', premium: 418000 },
+    { month: 'Oct 2025', premium: 442000 },
+    { month: 'Nov 2025', premium: 465000 },
+    { month: 'Dec 2025', premium: 488000 },
+    { month: 'Jan 2026', premium: 512000 },
+    { month: 'Feb 2026', premium: 533000 },
+  ],
 };
 
 export default function AnalyticsPage() {
-  const [metrics, setMetrics] = useState<DashboardMetrics>(defaultMetrics);
+  const [metrics, setMetrics] = useState<DashboardMetrics>(mockMetrics);
 
   useEffect(() => {
     analyticsApi.dashboard().then(setMetrics).catch(() => {});
@@ -34,8 +54,12 @@ export default function AnalyticsPage() {
     ? (metrics.totalExpectedClaims / metrics.totalPremiumInForce * 100).toFixed(1) + '%'
     : '-';
 
+  const coverageLabels: Record<string, string> = {
+    specific: 'Specific Stop Loss', aggregate: 'Aggregate Stop Loss', both: 'Both (Spec+Agg)',
+    quota_share: 'Quota Share', surety_bond: 'Surety Bonds',
+  };
   const coverageData = Object.entries(metrics.coverageBreakdown).map(([name, value]) => ({
-    name: name.toUpperCase(),
+    name: coverageLabels[name] || name.toUpperCase(),
     value,
   }));
 
@@ -46,7 +70,7 @@ export default function AnalyticsPage() {
 
   return (
     <div>
-      <h2 style={{ margin: '0 0 24px', fontSize: 24, fontWeight: 700, color: '#1e293b' }}>
+      <h2 style={{ margin: '0 0 24px', fontSize: 24, fontWeight: 700, color: '#452d5a' }}>
         Analytics & Reporting
       </h2>
 
@@ -97,7 +121,7 @@ export default function AnalyticsPage() {
               <XAxis dataKey="month" tick={{ fontSize: 12 }} />
               <YAxis tick={{ fontSize: 12 }} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}K`} />
               <Tooltip formatter={(v: number | undefined) => formatCurrency(v ?? 0)} />
-              <Line type="monotone" dataKey="premium" stroke="#3b82f6" strokeWidth={2} dot={{ fill: '#3b82f6' }} />
+              <Line type="monotone" dataKey="premium" stroke="#6f4891" strokeWidth={2} dot={{ fill: '#6f4891' }} />
             </LineChart>
           </ResponsiveContainer>
         </Card>

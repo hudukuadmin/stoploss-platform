@@ -37,7 +37,7 @@ const mockMetrics: DashboardMetrics = {
   averagePepmRate: 285.50,
   quotesByStatus: { draft: 5, pending_review: 4, approved: 6, bound: 3 },
   policiesByStatus: { active: 12, pending: 2, expired: 1 },
-  coverageBreakdown: { specific: 3, aggregate: 2, both: 7 },
+  coverageBreakdown: { specific: 3, aggregate: 2, both: 7, quota_share: 2, surety_bond: 4 },
   riskDistribution: { low: 8, moderate: 10, high: 5, very_high: 1 },
   premiumTrend: [
     { month: 'Sep', premium: 320000 },
@@ -71,12 +71,12 @@ export default function DashboardPage() {
 
   return (
     <div>
-      <h2 style={{ margin: '0 0 24px', fontSize: 24, fontWeight: 700, color: '#1e293b' }}>
+      <h2 style={{ margin: '0 0 24px', fontSize: 24, fontWeight: 700, color: '#452d5a' }}>
         Dashboard
       </h2>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16, marginBottom: 24 }}>
-        <MetricCard label="Total Groups" value={metrics.totalGroups} icon={<Users size={22} />} />
+        <MetricCard label="Plan Sponsors" value={metrics.totalGroups} icon={<Users size={22} />} />
         <MetricCard label="Active Quotes" value={metrics.totalActiveQuotes} icon={<FileText size={22} />} />
         <MetricCard label="Active Policies" value={metrics.totalActivePolicies} icon={<Shield size={22} />} />
         <MetricCard
@@ -104,7 +104,7 @@ export default function DashboardPage() {
               <XAxis dataKey="name" tick={{ fontSize: 12 }} />
               <YAxis tick={{ fontSize: 12 }} />
               <Tooltip />
-              <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="count" fill="#6f4891" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </Card>
@@ -139,7 +139,7 @@ export default function DashboardPage() {
             <XAxis dataKey="month" tick={{ fontSize: 12 }} />
             <YAxis tick={{ fontSize: 12 }} tickFormatter={(v) => `$${(v / 1000).toFixed(0)}K`} />
             <Tooltip formatter={(v: number | undefined) => formatCurrency(v ?? 0)} />
-            <Bar dataKey="premium" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="premium" fill="#8d5ead" radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </Card>

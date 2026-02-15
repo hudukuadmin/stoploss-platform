@@ -19,7 +19,7 @@ export default function Card({ children, style, title }: CardProps) {
       }}
     >
       {title && (
-        <h3 style={{ margin: '0 0 16px', fontSize: 16, fontWeight: 600, color: '#1e293b' }}>
+        <h3 style={{ margin: '0 0 16px', fontSize: 16, fontWeight: 600, color: '#452d5a' }}>
           {title}
         </h3>
       )}

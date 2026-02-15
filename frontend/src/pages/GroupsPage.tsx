@@ -75,28 +75,28 @@ export default function GroupsPage() {
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-        <h2 style={{ margin: 0, fontSize: 24, fontWeight: 700, color: '#1e293b' }}>Groups</h2>
+        <h2 style={{ margin: 0, fontSize: 24, fontWeight: 700, color: '#452d5a' }}>Plan Sponsors</h2>
         <button
           onClick={() => setShowForm(!showForm)}
           style={{
             display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px',
-            background: '#3b82f6', color: '#fff', border: 'none', borderRadius: 8,
+            background: '#6f4891', color: '#fff', border: 'none', borderRadius: 8,
             fontSize: 14, fontWeight: 600, cursor: 'pointer',
           }}
         >
-          <Plus size={16} /> New Group
+          <Plus size={16} /> New Plan Sponsor
         </button>
       </div>
 
       {showForm && (
-        <Card style={{ marginBottom: 24 }} title="Create New Group">
+        <Card style={{ marginBottom: 24 }} title="Create New Plan Sponsor">
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16, marginBottom: 16 }}>
             <div>
               <label style={labelStyle}>Name</label>
               <input style={inputStyle} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
             </div>
             <div>
-              <label style={labelStyle}>Group Type</label>
+              <label style={labelStyle}>Organization Type</label>
               <select style={inputStyle} value={form.groupType} onChange={(e) => setForm({ ...form, groupType: e.target.value as GroupType })}>
                 {Object.values(GroupType).map((t) => (
                   <option key={t} value={t}>{t.replace(/_/g, ' ').toUpperCase()}</option>
@@ -127,9 +127,9 @@ export default function GroupsPage() {
           <div style={{ display: 'flex', gap: 8 }}>
             <button
               onClick={handleCreate}
-              style={{ padding: '8px 20px', background: '#3b82f6', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer' }}
+              style={{ padding: '8px 20px', background: '#6f4891', color: '#fff', border: 'none', borderRadius: 8, fontWeight: 600, cursor: 'pointer' }}
             >
-              Create Group
+              Create Plan Sponsor
             </button>
             <button
               onClick={() => setShowForm(false)}
@@ -157,9 +157,9 @@ export default function GroupsPage() {
               <tr
                 key={group.id}
                 style={{ borderBottom: '1px solid #f1f5f9', cursor: 'pointer' }}
-                onClick={() => navigate(`/groups/${group.id}`)}
+                onClick={() => navigate(`/plan-sponsors/${group.id}`)}
               >
-                <td style={{ padding: '12px', fontWeight: 600, color: '#1e293b' }}>{group.name}</td>
+                <td style={{ padding: '12px', fontWeight: 600, color: '#452d5a' }}>{group.name}</td>
                 <td style={{ padding: '12px' }}>
                   <StatusBadge status={group.groupType} />
                 </td>

@@ -27,11 +27,11 @@ export default function MetricCard({ label, value, icon, trend }: MetricCardProp
             width: 44,
             height: 44,
             borderRadius: 10,
-            background: '#eff6ff',
+            background: '#f6f1f9',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#3b82f6',
+            color: '#6f4891',
           }}
         >
           {icon}
@@ -39,7 +39,7 @@ export default function MetricCard({ label, value, icon, trend }: MetricCardProp
       )}
       <div>
         <div style={{ fontSize: 13, color: '#64748b', marginBottom: 4 }}>{label}</div>
-        <div style={{ fontSize: 24, fontWeight: 700, color: '#1e293b' }}>{value}</div>
+        <div style={{ fontSize: 24, fontWeight: 700, color: '#452d5a' }}>{value}</div>
         {trend && <div style={{ fontSize: 12, color: '#22c55e', marginTop: 4 }}>{trend}</div>}
       </div>
     </div>

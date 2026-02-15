@@ -8,7 +8,7 @@ const statusColors: Record<string, { bg: string; text: string }> = {
   approved: { bg: '#dcfce7', text: '#166534' },
   declined: { bg: '#fee2e2', text: '#991b1b' },
   expired: { bg: '#f1f5f9', text: '#64748b' },
-  bound: { bg: '#dbeafe', text: '#1e40af' },
+  bound: { bg: '#e8d5f5', text: '#452d5a' },
   active: { bg: '#dcfce7', text: '#166534' },
   cancelled: { bg: '#fee2e2', text: '#991b1b' },
   pending: { bg: '#fef3c7', text: '#92400e' },
@@ -16,6 +16,8 @@ const statusColors: Record<string, { bg: string; text: string }> = {
   moderate: { bg: '#fef3c7', text: '#92400e' },
   high: { bg: '#fed7aa', text: '#9a3412' },
   very_high: { bg: '#fee2e2', text: '#991b1b' },
+  quota_share: { bg: '#e0f2fe', text: '#075985' },
+  surety_bond: { bg: '#fce7f3', text: '#9d174d' },
 };
 
 export default function StatusBadge({ status }: StatusBadgeProps) {

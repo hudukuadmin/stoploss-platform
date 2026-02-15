@@ -5,8 +5,94 @@ import type { UnderwritingReview } from '../types';
 import { UnderwritingDecision } from '../types';
 import { underwritingApi } from '../api/services';
 
+const mockReviews: UnderwritingReview[] = [
+  {
+    id: 'ur-1',
+    quoteId: '1',
+    quote: { id: '1', quoteNumber: 'BSQ-2026-001', groupId: '1', coverageType: 'both', status: 'approved', effectiveDate: '2026-03-01', expirationDate: '2027-02-28', contractPeriodMonths: 12, createdAt: '2026-01-15T10:00:00Z' },
+    decision: 'approve' as any,
+    riskTier: 'low' as any,
+    riskScore: 0.42,
+    riskFactors: { demographicScore: 0.45, historicalClaimsScore: 0.40, chronicConditionScore: 0.35, largeClaimantScore: 0.18, geographicScore: 0.55, industryScore: 0.48 },
+    largeClaimantCount: 2,
+    expectedLossRatio: 0.74,
+    recommendedAttachmentPoint: 250000,
+    premiumAdjustmentFactor: 1.0,
+    notes: 'Low risk group with favorable claims history. Approved at standard rates.',
+    reviewedBy: 'Dr. Sarah Chen',
+    reviewedAt: '2026-01-18T14:30:00Z',
+    createdAt: '2026-01-16T09:00:00Z',
+  },
+  {
+    id: 'ur-2',
+    quoteId: '2',
+    quote: { id: '2', quoteNumber: 'BSQ-2026-002', groupId: '2', coverageType: 'specific', status: 'pending_review', effectiveDate: '2026-04-01', expirationDate: '2027-03-31', contractPeriodMonths: 12, createdAt: '2026-01-20T14:30:00Z' },
+    decision: 'refer' as any,
+    riskTier: 'moderate' as any,
+    riskScore: 0.55,
+    riskFactors: { demographicScore: 0.58, historicalClaimsScore: 0.52, chronicConditionScore: 0.50, largeClaimantScore: 0.35, geographicScore: 0.62, industryScore: 0.55 },
+    largeClaimantCount: 5,
+    expectedLossRatio: 0.82,
+    recommendedAttachmentPoint: 200000,
+    premiumAdjustmentFactor: 1.12,
+    notes: 'Moderate risk with elevated large claimant count. Referred for senior review. Consider increasing attachment point.',
+    reviewedBy: 'James Mitchell',
+    reviewedAt: '2026-01-22T10:15:00Z',
+    createdAt: '2026-01-21T08:00:00Z',
+  },
+  {
+    id: 'ur-3',
+    quoteId: '3',
+    quote: { id: '3', quoteNumber: 'BSQ-2026-003', groupId: '3', coverageType: 'aggregate', status: 'pending_review', effectiveDate: '2026-05-01', expirationDate: '2027-04-30', contractPeriodMonths: 12, createdAt: '2026-02-01T09:15:00Z' },
+    decision: 'approve' as any,
+    riskTier: 'low' as any,
+    riskScore: 0.38,
+    riskFactors: { demographicScore: 0.40, historicalClaimsScore: 0.35, chronicConditionScore: 0.30, largeClaimantScore: 0.15, geographicScore: 0.50, industryScore: 0.42 },
+    largeClaimantCount: 3,
+    expectedLossRatio: 0.68,
+    recommendedAttachmentPoint: 220000,
+    premiumAdjustmentFactor: 0.95,
+    notes: 'Excellent claims history and low chronic condition prevalence. Approved with 5% premium discount.',
+    reviewedBy: 'Dr. Sarah Chen',
+    reviewedAt: '2026-02-03T11:45:00Z',
+    createdAt: '2026-02-02T10:00:00Z',
+  },
+  {
+    id: 'ur-4',
+    quoteId: '5',
+    quote: { id: '5', quoteNumber: 'BSQ-2026-005', groupId: '2', coverageType: 'specific', status: 'declined', effectiveDate: '2026-03-01', expirationDate: '2027-02-28', contractPeriodMonths: 12, createdAt: '2026-01-25T16:45:00Z' },
+    decision: 'decline' as any,
+    riskTier: 'very_high' as any,
+    riskScore: 0.72,
+    riskFactors: { demographicScore: 0.70, historicalClaimsScore: 0.75, chronicConditionScore: 0.68, largeClaimantScore: 0.58, geographicScore: 0.72, industryScore: 0.65 },
+    largeClaimantCount: 11,
+    expectedLossRatio: 1.05,
+    recommendedAttachmentPoint: 350000,
+    premiumAdjustmentFactor: 1.35,
+    notes: 'Very high risk profile with expected loss ratio exceeding 100%. High large claimant concentration. Declined per underwriting guidelines.',
+    reviewedBy: 'James Mitchell',
+    reviewedAt: '2026-01-27T09:30:00Z',
+    createdAt: '2026-01-26T08:00:00Z',
+  },
+  {
+    id: 'ur-5',
+    quoteId: '6',
+    quote: { id: '6', quoteNumber: 'BSQ-2026-006', groupId: '3', coverageType: 'both', status: 'draft', effectiveDate: '2026-06-01', expirationDate: '2027-05-31', contractPeriodMonths: 12, createdAt: '2026-02-10T08:20:00Z' },
+    decision: 'request_info' as any,
+    riskTier: 'moderate' as any,
+    riskScore: 0.46,
+    riskFactors: { demographicScore: 0.48, historicalClaimsScore: 0.44, chronicConditionScore: 0.42, largeClaimantScore: 0.25, geographicScore: 0.52, industryScore: 0.46 },
+    largeClaimantCount: 4,
+    expectedLossRatio: 0.78,
+    recommendedAttachmentPoint: 230000,
+    premiumAdjustmentFactor: 1.05,
+    notes: 'Borderline moderate risk. Requesting 24 months of detailed claims run-out data and updated census before final determination.',
+    createdAt: '2026-02-11T09:00:00Z',
+  },
+];
+
 export default function UnderwritingPage() {
-  const [reviews, setReviews] = useState<UnderwritingReview[]>([]);
+  const [reviews, setReviews] = useState<UnderwritingReview[]>(mockReviews);
   const [selected, setSelected] = useState<UnderwritingReview | null>(null);
 
   useEffect(() => {
@@ -36,7 +122,7 @@ export default function UnderwritingPage() {
 
   return (
     <div>
-      <h2 style={{ margin: '0 0 24px', fontSize: 24, fontWeight: 700, color: '#1e293b' }}>
+      <h2 style={{ margin: '0 0 24px', fontSize: 24, fontWeight: 700, color: '#452d5a' }}>
         Underwriting Workbench
       </h2>
 
@@ -59,7 +145,7 @@ export default function UnderwritingPage() {
                 {reviews.map((review) => (
                   <tr
                     key={review.id}
-                    style={{ borderBottom: '1px solid #f1f5f9', cursor: 'pointer', background: selected?.id === review.id ? '#eff6ff' : 'transparent' }}
+                    style={{ borderBottom: '1px solid #f1f5f9', cursor: 'pointer', background: selected?.id === review.id ? '#f6f1f9' : 'transparent' }}
                     onClick={() => setSelected(review)}
                   >
                     <td style={{ padding: '10px 8px', fontWeight: 600, fontSize: 13 }}>{review.quote?.quoteNumber || review.quoteId.slice(0, 8)}</td>

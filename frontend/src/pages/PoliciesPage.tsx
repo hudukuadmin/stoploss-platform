@@ -9,8 +9,111 @@ const formatCurrency = (val: number | undefined) =>
     ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(val)
     : '-';
 
+const mockPolicies: Policy[] = [
+  {
+    id: 'p-1',
+    policyNumber: 'BSP-2026-0001',
+    groupId: '1',
+    group: { id: '1', name: 'Pacific Health ACO', groupType: 'aco' as any, contractType: 'shared_risk' as any, memberCount: 4500, createdAt: '2026-01-15', updatedAt: '2026-01-15' },
+    quoteId: '4',
+    coverageType: 'both' as any,
+    status: 'active' as any,
+    effectiveDate: '2026-01-01',
+    terminationDate: '2026-12-31',
+    specificAttachmentPoint: 300000,
+    specificMaxLiability: 1500000,
+    aggregateAttachmentPoint: 4200000,
+    aggregateAttachmentFactor: 1.30,
+    aggregateMaxLiability: 2000000,
+    totalAnnualPremium: 315000,
+    pepmRate: 345.60,
+    boundBy: 'Dr. Sarah Chen',
+    boundAt: '2025-12-15T10:00:00Z',
+    createdAt: '2025-12-15T10:00:00Z',
+  },
+  {
+    id: 'p-2',
+    policyNumber: 'BSP-2026-0002',
+    groupId: '3',
+    group: { id: '3', name: 'Southeast TPA Solutions', groupType: 'tpa' as any, contractType: 'shared_savings' as any, memberCount: 8100, createdAt: '2025-12-20', updatedAt: '2025-12-20' },
+    quoteId: '3',
+    coverageType: 'aggregate' as any,
+    status: 'active' as any,
+    effectiveDate: '2026-02-01',
+    terminationDate: '2027-01-31',
+    aggregateAttachmentPoint: 5600000,
+    aggregateAttachmentFactor: 1.20,
+    aggregateMaxLiability: 2800000,
+    totalAnnualPremium: 218000,
+    pepmRate: 268.40,
+    boundBy: 'James Mitchell',
+    boundAt: '2026-01-28T14:30:00Z',
+    createdAt: '2026-01-28T14:30:00Z',
+  },
+  {
+    id: 'p-3',
+    policyNumber: 'BSP-2025-0008',
+    groupId: '2',
+    group: { id: '2', name: 'Midwest Provider Network', groupType: 'provider_group' as any, contractType: 'full_risk' as any, memberCount: 2200, createdAt: '2026-01-10', updatedAt: '2026-01-10' },
+    quoteId: '7',
+    coverageType: 'specific' as any,
+    status: 'expired' as any,
+    effectiveDate: '2025-01-01',
+    terminationDate: '2025-12-31',
+    specificAttachmentPoint: 200000,
+    specificMaxLiability: 1000000,
+    totalAnnualPremium: 84000,
+    pepmRate: 218.90,
+    boundBy: 'Dr. Sarah Chen',
+    boundAt: '2024-12-10T09:00:00Z',
+    createdAt: '2024-12-10T09:00:00Z',
+  },
+  {
+    id: 'p-4',
+    policyNumber: 'BSP-2026-0003',
+    groupId: '1',
+    group: { id: '1', name: 'Pacific Health ACO', groupType: 'aco' as any, contractType: 'shared_risk' as any, memberCount: 4500, createdAt: '2026-01-15', updatedAt: '2026-01-15' },
+    quoteId: '1',
+    coverageType: 'both' as any,
+    status: 'pending' as any,
+    effectiveDate: '2026-03-01',
+    terminationDate: '2027-02-28',
+    specificAttachmentPoint: 250000,
+    specificMaxLiability: 1250000,
+    aggregateAttachmentPoint: 3800000,
+    aggregateAttachmentFactor: 1.25,
+    aggregateMaxLiability: 1900000,
+    totalAnnualPremium: 267000,
+    pepmRate: 310.25,
+    boundBy: 'James Mitchell',
+    boundAt: '2026-02-05T16:00:00Z',
+    createdAt: '2026-02-05T16:00:00Z',
+  },
+  {
+    id: 'p-5',
+    policyNumber: 'BSP-2025-0005',
+    groupId: '3',
+    group: { id: '3', name: 'Southeast TPA Solutions', groupType: 'tpa' as any, contractType: 'shared_savings' as any, memberCount: 8100, createdAt: '2025-12-20', updatedAt: '2025-12-20' },
+    quoteId: '8',
+    coverageType: 'both' as any,
+    status: 'cancelled' as any,
+    effectiveDate: '2025-06-01',
+    terminationDate: '2026-05-31',
+    specificAttachmentPoint: 275000,
+    specificMaxLiability: 1375000,
+    aggregateAttachmentPoint: 5000000,
+    aggregateAttachmentFactor: 1.18,
+    aggregateMaxLiability: 2500000,
+    totalAnnualPremium: 295000,
+    pepmRate: 302.15,
+    boundBy: 'Dr. Sarah Chen',
+    boundAt: '2025-05-20T11:00:00Z',
+    createdAt: '2025-05-20T11:00:00Z',
+  },
+];
+
 export default function PoliciesPage() {
-  const [policies, setPolicies] = useState<Policy[]>([]);
+  const [policies, setPolicies] = useState<Policy[]>(mockPolicies);
   const [selected, setSelected] = useState<Policy | null>(null);
 
   useEffect(() => {
@@ -19,19 +122,19 @@ export default function PoliciesPage() {
 
   return (
     <div>
-      <h2 style={{ margin: '0 0 24px', fontSize: 24, fontWeight: 700, color: '#1e293b' }}>Policies</h2>
+      <h2 style={{ margin: '0 0 24px', fontSize: 24, fontWeight: 700, color: '#452d5a' }}>Policies</h2>
 
       <div style={{ display: 'grid', gridTemplateColumns: selected ? '1fr 1fr' : '1fr', gap: 16 }}>
         <Card>
           {policies.length === 0 ? (
             <p style={{ color: '#64748b', textAlign: 'center', padding: 40 }}>
-              No policies yet. Bind an approved quote to create a policy.
+              No policies yet. Bind an approved quote to create a policy for a plan sponsor.
             </p>
           ) : (
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
                 <tr style={{ borderBottom: '2px solid #e2e8f0' }}>
-                  {['Policy #', 'Group', 'Coverage', 'Status', 'Premium', 'PEPM', 'Effective'].map((h) => (
+                  {['Policy #', 'Plan Sponsor', 'Coverage', 'Status', 'Premium', 'PEPM', 'Effective'].map((h) => (
                     <th key={h} style={{ padding: '10px 8px', textAlign: 'left', fontSize: 11, fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>{h}</th>
                   ))}
                 </tr>
@@ -40,10 +143,10 @@ export default function PoliciesPage() {
                 {policies.map((policy) => (
                   <tr
                     key={policy.id}
-                    style={{ borderBottom: '1px solid #f1f5f9', cursor: 'pointer', background: selected?.id === policy.id ? '#eff6ff' : 'transparent' }}
+                    style={{ borderBottom: '1px solid #f1f5f9', cursor: 'pointer', background: selected?.id === policy.id ? '#f6f1f9' : 'transparent' }}
                     onClick={() => setSelected(policy)}
                   >
-                    <td style={{ padding: '10px 8px', fontWeight: 600, fontSize: 13, color: '#3b82f6' }}>{policy.policyNumber}</td>
+                    <td style={{ padding: '10px 8px', fontWeight: 600, fontSize: 13, color: '#6f4891' }}>{policy.policyNumber}</td>
                     <td style={{ padding: '10px 8px', fontSize: 13 }}>{policy.group?.name || '-'}</td>
                     <td style={{ padding: '10px 8px' }}><StatusBadge status={policy.coverageType} /></td>
                     <td style={{ padding: '10px 8px' }}><StatusBadge status={policy.status} /></td>

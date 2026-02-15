@@ -2,6 +2,8 @@ export const CoverageType = {
   SPECIFIC: 'specific',
   AGGREGATE: 'aggregate',
   BOTH: 'both',
+  QUOTA_SHARE: 'quota_share',
+  SURETY_BOND: 'surety_bond',
 } as const;
 export type CoverageType = (typeof CoverageType)[keyof typeof CoverageType];
 

@@ -11,8 +11,167 @@ const formatCurrency = (val: number | undefined) =>
     ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(val)
     : '-';
 
+const mockQuotes: Quote[] = [
+  {
+    id: '1',
+    quoteNumber: 'BSQ-2026-001',
+    groupId: '1',
+    coverageType: CoverageType.BOTH,
+    status: QuoteStatus.APPROVED,
+    specificAttachmentPoint: 250000,
+    specificAnnualPremium: 105000,
+    aggregateAttachmentFactor: 1.25,
+    aggregateAnnualPremium: 162000,
+    totalAnnualPremium: 267000,
+    pepmRate: 310.25,
+    riskScore: 0.42,
+    expectedClaims: 3800000,
+    effectiveDate: '2026-03-01',
+    expirationDate: '2027-02-28',
+    contractPeriodMonths: 12,
+    createdAt: '2026-01-15T10:00:00Z',
+    riskFactors: {
+      demographicScore: 0.45,
+      historicalClaimsScore: 0.40,
+      chronicConditionScore: 0.35,
+      largeClaimantScore: 0.18,
+      geographicScore: 0.55,
+      industryScore: 0.48,
+    },
+  },
+  {
+    id: '2',
+    quoteNumber: 'BSQ-2026-002',
+    groupId: '2',
+    coverageType: CoverageType.SPECIFIC,
+    status: QuoteStatus.DRAFT,
+    specificAttachmentPoint: 175000,
+    specificAnnualPremium: 73500,
+    totalAnnualPremium: 73500,
+    pepmRate: 195.80,
+    riskScore: 0.55,
+    expectedClaims: 2100000,
+    effectiveDate: '2026-04-01',
+    expirationDate: '2027-03-31',
+    contractPeriodMonths: 12,
+    createdAt: '2026-01-20T14:30:00Z',
+    riskFactors: {
+      demographicScore: 0.58,
+      historicalClaimsScore: 0.52,
+      chronicConditionScore: 0.50,
+      largeClaimantScore: 0.35,
+      geographicScore: 0.62,
+      industryScore: 0.55,
+    },
+  },
+  {
+    id: '3',
+    quoteNumber: 'BSQ-2026-003',
+    groupId: '3',
+    coverageType: CoverageType.AGGREGATE,
+    status: QuoteStatus.PENDING_REVIEW,
+    aggregateAttachmentFactor: 1.20,
+    aggregateAnnualPremium: 218000,
+    totalAnnualPremium: 218000,
+    pepmRate: 268.40,
+    riskScore: 0.38,
+    expectedClaims: 5600000,
+    effectiveDate: '2026-05-01',
+    expirationDate: '2027-04-30',
+    contractPeriodMonths: 12,
+    createdAt: '2026-02-01T09:15:00Z',
+    riskFactors: {
+      demographicScore: 0.40,
+      historicalClaimsScore: 0.35,
+      chronicConditionScore: 0.30,
+      largeClaimantScore: 0.15,
+      geographicScore: 0.50,
+      industryScore: 0.42,
+    },
+  },
+  {
+    id: '4',
+    quoteNumber: 'BSQ-2026-004',
+    groupId: '1',
+    coverageType: CoverageType.BOTH,
+    status: QuoteStatus.BOUND,
+    specificAttachmentPoint: 300000,
+    specificAnnualPremium: 126000,
+    aggregateAttachmentFactor: 1.30,
+    aggregateAnnualPremium: 189000,
+    totalAnnualPremium: 315000,
+    pepmRate: 345.60,
+    riskScore: 0.31,
+    expectedClaims: 4200000,
+    effectiveDate: '2026-01-01',
+    expirationDate: '2026-12-31',
+    contractPeriodMonths: 12,
+    createdAt: '2025-12-10T11:00:00Z',
+    riskFactors: {
+      demographicScore: 0.32,
+      historicalClaimsScore: 0.28,
+      chronicConditionScore: 0.25,
+      largeClaimantScore: 0.12,
+      geographicScore: 0.45,
+      industryScore: 0.38,
+    },
+  },
+  {
+    id: '5',
+    quoteNumber: 'BSQ-2026-005',
+    groupId: '2',
+    coverageType: CoverageType.SPECIFIC,
+    status: QuoteStatus.DECLINED,
+    specificAttachmentPoint: 150000,
+    specificAnnualPremium: 94500,
+    totalAnnualPremium: 94500,
+    pepmRate: 425.10,
+    riskScore: 0.72,
+    expectedClaims: 1950000,
+    effectiveDate: '2026-03-01',
+    expirationDate: '2027-02-28',
+    contractPeriodMonths: 12,
+    createdAt: '2026-01-25T16:45:00Z',
+    riskFactors: {
+      demographicScore: 0.70,
+      historicalClaimsScore: 0.75,
+      chronicConditionScore: 0.68,
+      largeClaimantScore: 0.58,
+      geographicScore: 0.72,
+      industryScore: 0.65,
+    },
+  },
+  {
+    id: '6',
+    quoteNumber: 'BSQ-2026-006',
+    groupId: '3',
+    coverageType: CoverageType.BOTH,
+    status: QuoteStatus.DRAFT,
+    specificAttachmentPoint: 225000,
+    specificAnnualPremium: 113400,
+    aggregateAttachmentFactor: 1.22,
+    aggregateAnnualPremium: 175000,
+    totalAnnualPremium: 288400,
+    pepmRate: 290.75,
+    riskScore: 0.46,
+    expectedClaims: 5200000,
+    effectiveDate: '2026-06-01',
+    expirationDate: '2027-05-31',
+    contractPeriodMonths: 12,
+    createdAt: '2026-02-10T08:20:00Z',
+    riskFactors: {
+      demographicScore: 0.48,
+      historicalClaimsScore: 0.44,
+      chronicConditionScore: 0.42,
+      largeClaimantScore: 0.25,
+      geographicScore: 0.52,
+      industryScore: 0.46,
+    },
+  },
+];
+
 export default function QuotesPage() {
-  const [quotes, setQuotes] = useState<Quote[]>([]);
+  const [quotes, setQuotes] = useState<Quote[]>(mockQuotes);
   const [groups, setGroups] = useState<Group[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [selectedQuote, setSelectedQuote] = useState<Quote | null>(null);
@@ -114,10 +273,10 @@ export default function QuotesPage() {
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-        <h2 style={{ margin: 0, fontSize: 24, fontWeight: 700, color: '#1e293b' }}>Quotes</h2>
+        <h2 style={{ margin: 0, fontSize: 24, fontWeight: 700, color: '#452d5a' }}>Quotes</h2>
         <button
           onClick={() => setShowForm(!showForm)}
-          style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px', background: '#3b82f6', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}
+          style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 20px', background: '#6f4891', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}
         >
           <Plus size={16} /> Generate Quote
         </button>
@@ -127,9 +286,9 @@ export default function QuotesPage() {
         <Card style={{ marginBottom: 24 }} title="Generate New Quote">
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16, marginBottom: 16 }}>
             <div>
-              <label style={labelStyle}>Group</label>
+              <label style={labelStyle}>Plan Sponsor</label>
               <select style={inputStyle} value={form.groupId} onChange={(e) => setForm({ ...form, groupId: e.target.value })}>
-                <option value="">Select a group...</option>
+                <option value="">Select a plan sponsor...</option>
                 {groups.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}
               </select>
             </div>
@@ -157,7 +316,7 @@ export default function QuotesPage() {
             </div>
           </div>
           <div style={{ display: 'flex', gap: 8 }}>
-            <button onClick={handleGenerate} style={btnStyle('#3b82f6', '#fff')}>Generate Quote</button>
+            <button onClick={handleGenerate} style={btnStyle('#6f4891', '#fff')}>Generate Quote</button>
             <button onClick={() => setShowForm(false)} style={btnStyle('#f1f5f9', '#64748b')}>Cancel</button>
           </div>
         </Card>
@@ -180,7 +339,7 @@ export default function QuotesPage() {
                   style={{
                     borderBottom: '1px solid #f1f5f9',
                     cursor: 'pointer',
-                    background: selectedQuote?.id === quote.id ? '#eff6ff' : 'transparent',
+                    background: selectedQuote?.id === quote.id ? '#f6f1f9' : 'transparent',
                   }}
                   onClick={() => setSelectedQuote(quote)}
                 >
@@ -224,11 +383,11 @@ export default function QuotesPage() {
                 </div>
                 <div>
                   <div style={{ fontSize: 11, color: '#64748b', textTransform: 'uppercase' }}>Total Annual Premium</div>
-                  <div style={{ fontSize: 18, fontWeight: 700, color: '#1e293b', marginTop: 2 }}>{formatCurrency(selectedQuote.totalAnnualPremium)}</div>
+                  <div style={{ fontSize: 18, fontWeight: 700, color: '#452d5a', marginTop: 2 }}>{formatCurrency(selectedQuote.totalAnnualPremium)}</div>
                 </div>
                 <div>
                   <div style={{ fontSize: 11, color: '#64748b', textTransform: 'uppercase' }}>PEPM Rate</div>
-                  <div style={{ fontSize: 18, fontWeight: 700, color: '#1e293b', marginTop: 2 }}>{formatCurrency(selectedQuote.pepmRate)}</div>
+                  <div style={{ fontSize: 18, fontWeight: 700, color: '#452d5a', marginTop: 2 }}>{formatCurrency(selectedQuote.pepmRate)}</div>
                 </div>
               </div>
 
