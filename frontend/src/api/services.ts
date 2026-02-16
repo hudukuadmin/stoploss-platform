@@ -71,3 +71,26 @@ export const underwritingApi = {
 export const analyticsApi = {
   dashboard: () => api.get<DashboardMetrics>('/analytics/dashboard').then((r) => r.data),
 };
+
+export interface NarrativeResponse {
+  summary: string;
+  keyDrivers: string[];
+  recommendation: string;
+  generatedBy: 'ai' | 'rules';
+}
+
+export const aiNarrativeApi = {
+  generate: (data: {
+    riskScore: number;
+    riskTier: string;
+    decision: string;
+    riskFactors: Record<string, number>;
+    largeClaimantCount: number;
+    expectedLossRatio: number;
+    recommendedAttachmentPoint: number;
+    premiumAdjustmentFactor: number;
+    quoteNumber?: string;
+    coverageType?: string;
+    groupName?: string;
+  }) => api.post<NarrativeResponse>('/ai-narrative/generate', data).then((r) => r.data),
+};

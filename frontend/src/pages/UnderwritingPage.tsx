@@ -3,7 +3,9 @@ import Card from '../components/common/Card';
 import StatusBadge from '../components/common/StatusBadge';
 import type { UnderwritingReview } from '../types';
 import { UnderwritingDecision } from '../types';
-import { underwritingApi } from '../api/services';
+import { underwritingApi, aiNarrativeApi } from '../api/services';
+import type { NarrativeResponse } from '../api/services';
+import { Sparkles } from 'lucide-react';
 
 const mockReviews: UnderwritingReview[] = [
   {
@@ -94,6 +96,9 @@ const mockReviews: UnderwritingReview[] = [
 export default function UnderwritingPage() {
   const [reviews, setReviews] = useState<UnderwritingReview[]>(mockReviews);
   const [selected, setSelected] = useState<UnderwritingReview | null>(null);
+  const [narrative, setNarrative] = useState<NarrativeResponse | null>(null);
+  const [narrativeLoading, setNarrativeLoading] = useState(false);
+  const [narrativeError, setNarrativeError] = useState<string | null>(null);
 
   useEffect(() => {
     underwritingApi.list().then(setReviews).catch(() => {});
@@ -110,6 +115,31 @@ export default function UnderwritingPage() {
       const updated = await underwritingApi.list();
       setReviews(updated);
     } catch {}
+  };
+
+  const handleGenerateNarrative = async (review: UnderwritingReview) => {
+    setNarrativeLoading(true);
+    setNarrativeError(null);
+    setNarrative(null);
+    try {
+      const result = await aiNarrativeApi.generate({
+        riskScore: review.riskScore,
+        riskTier: review.riskTier,
+        decision: review.decision,
+        riskFactors: review.riskFactors,
+        largeClaimantCount: review.largeClaimantCount,
+        expectedLossRatio: review.expectedLossRatio ?? 0,
+        recommendedAttachmentPoint: review.recommendedAttachmentPoint ?? 0,
+        premiumAdjustmentFactor: review.premiumAdjustmentFactor,
+        quoteNumber: review.quote?.quoteNumber,
+        coverageType: review.quote?.coverageType,
+      });
+      setNarrative(result);
+    } catch {
+      setNarrativeError('Failed to generate narrative. Please try again.');
+    } finally {
+      setNarrativeLoading(false);
+    }
   };
 
   const formatCurrency = (val: number | undefined) =>
@@ -146,7 +176,7 @@ export default function UnderwritingPage() {
                   <tr
                     key={review.id}
                     style={{ borderBottom: '1px solid #f1f5f9', cursor: 'pointer', background: selected?.id === review.id ? '#f6f1f9' : 'transparent' }}
-                    onClick={() => setSelected(review)}
+                    onClick={() => { setSelected(review); setNarrative(null); setNarrativeError(null); }}
                   >
                     <td style={{ padding: '10px 8px', fontWeight: 600, fontSize: 13 }}>{review.quote?.quoteNumber || review.quoteId.slice(0, 8)}</td>
                     <td style={{ padding: '10px 8px' }}><StatusBadge status={review.riskTier} /></td>
@@ -230,6 +260,71 @@ export default function UnderwritingPage() {
                   <h4 style={{ margin: 0, fontSize: 14, fontWeight: 600 }}>Notes</h4>
                   <p style={{ fontSize: 13, color: '#64748b', margin: 0 }}>{selected.notes}</p>
                 </>
+              )}
+
+              <hr style={{ border: 'none', borderTop: '1px solid #e2e8f0' }} />
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <h4 style={{ margin: 0, fontSize: 14, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <Sparkles size={16} style={{ color: '#8b5cf6' }} />
+                  AI Risk Narrative
+                </h4>
+                <button
+                  onClick={() => handleGenerateNarrative(selected)}
+                  disabled={narrativeLoading}
+                  style={{
+                    padding: '6px 14px',
+                    background: narrativeLoading ? '#a78bfa' : 'linear-gradient(135deg, #8b5cf6, #6d28d9)',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: 6,
+                    fontSize: 12,
+                    fontWeight: 600,
+                    cursor: narrativeLoading ? 'not-allowed' : 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 6,
+                  }}
+                >
+                  <Sparkles size={12} />
+                  {narrativeLoading ? 'Generating...' : narrative ? 'Regenerate' : 'Generate'}
+                </button>
+              </div>
+
+              {narrativeError && (
+                <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 8, padding: 10, fontSize: 12, color: '#dc2626' }}>
+                  {narrativeError}
+                </div>
+              )}
+
+              {narrativeLoading && (
+                <div style={{ background: '#f5f3ff', borderRadius: 8, padding: 16, textAlign: 'center' }}>
+                  <div style={{ fontSize: 13, color: '#7c3aed', fontWeight: 500 }}>Analyzing risk factors...</div>
+                  <div style={{ fontSize: 11, color: '#a78bfa', marginTop: 4 }}>Generating underwriting narrative</div>
+                </div>
+              )}
+
+              {narrative && !narrativeLoading && (
+                <div style={{ background: '#f5f3ff', borderRadius: 8, padding: 14, display: 'grid', gap: 10 }}>
+                  <div>
+                    <div style={{ fontSize: 11, color: '#7c3aed', fontWeight: 600, textTransform: 'uppercase', marginBottom: 4 }}>Summary</div>
+                    <p style={{ fontSize: 13, color: '#1e1b4b', margin: 0, lineHeight: 1.5 }}>{narrative.summary}</p>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 11, color: '#7c3aed', fontWeight: 600, textTransform: 'uppercase', marginBottom: 4 }}>Key Drivers</div>
+                    <ul style={{ margin: 0, paddingLeft: 16 }}>
+                      {narrative.keyDrivers.map((driver, i) => (
+                        <li key={i} style={{ fontSize: 12, color: '#374151', lineHeight: 1.6 }}>{driver}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 11, color: '#7c3aed', fontWeight: 600, textTransform: 'uppercase', marginBottom: 4 }}>Recommendation</div>
+                    <p style={{ fontSize: 13, color: '#1e1b4b', margin: 0, lineHeight: 1.5, fontWeight: 500 }}>{narrative.recommendation}</p>
+                  </div>
+                  <div style={{ fontSize: 10, color: '#a78bfa', textAlign: 'right' }}>
+                    Generated by {narrative.generatedBy === 'ai' ? 'AI model' : 'rules engine'}
+                  </div>
+                </div>
               )}
             </div>
           </Card>

@@ -9,6 +9,7 @@ import { PoliciesModule } from './modules/policies/policies.module';
 import { UnderwritingModule } from './modules/underwriting/underwriting.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { RiskScoringModule } from './modules/risk-scoring/risk-scoring.module';
+import { AiNarrativeModule } from './modules/ai-narrative/ai-narrative.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { RiskScoringModule } from './modules/risk-scoring/risk-scoring.module';
     UnderwritingModule,
     AnalyticsModule,
     RiskScoringModule,
+    AiNarrativeModule,
   ],
 })
 export class AppModule {}
